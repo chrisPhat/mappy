@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
         accessToken: 'pk.eyJ1IjoiY2hyaXNib290aHBseW11bmkiLCJhIjoiY2tvanVhY2QzMGhwbzJxcHZyenZ3c3ExZCJ9.WRN7D1Y_oyg_UUcxdSPXFg'
     }).addTo(map);
 
+    getPins();
+
     var elems = document.querySelectorAll('.modal');
     var instances = M.Modal.init(elems);
 
@@ -37,6 +39,21 @@ document.addEventListener('DOMContentLoaded', ()=>{
         })
 
         console.log(event.latlng);
+    }
+
+    function getPins(){
+        fetch('/getLocations')
+        .then(res => res.json())
+        .then((data) => {
+            let dataFeed = data.map((pin) =>{
+                var marker = L.marker([pin.lat, pin.lng]).addTo(map);
+                marker.bindPopup(`
+                <h3>${pin.name}</h3>
+                <p>What 3 Wods Ref: ${pin.w3w}</p>
+                <p>${pin.notes}</p>
+                `)
+            })
+        })
     }
 });
 
